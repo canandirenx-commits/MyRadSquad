@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKENS — change the look of the whole app from here.
+   Each token becomes a Tailwind class, e.g. --color-surface → bg-surface
+   ============================================================ */
+@theme {
+  /* ---- Font: Apple's system font (SF Pro) on iPhone / Mac ---- */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", sans-serif;
+  --font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+
+  /* ---- Colors: near-black, neutral, photo-first ---- */
+  --color-bg: #000000;               /* app background */
+  --color-surface: #111113;          /* cards, chat bubbles */
+  --color-surface-2: #1c1c1e;        /* raised: inputs, sheets */
+  --color-line: rgb(255 255 255 / 0.10);  /* hairlines & borders */
+  --color-label: #e5e5ea;            /* primary text: iOS-like light gray, not pure white (decision #48) */
+  --color-heading: #e5e5ea;          /* headings — same light gray */
+  --color-label-2: rgb(235 235 245 / 0.60); /* secondary text (iOS) */
+  --color-label-3: rgb(235 235 245 / 0.50); /* tertiary text: 4.6:1 on black, 4.5:1 on surface-2 (WCAG AA, decision #75) */
+  --color-danger: #ff453a;           /* iOS red (dark mode) */
+  --color-accent: #7c3aed;           /* purple FILLS that carry text: primary buttons, my bubbles, badges — 5.1:1 with on-accent */
+  --color-accent-text: #a78bfa;      /* purple TEXT and icons on dark: text buttons, links — 7.7:1 on black, 6.1:1 on surface-2 */
+  --color-on-accent: #f2f2f7;        /* text on accent (near-white, matches the light-gray text) */
+
+  /* ---- Spark (AI) blues: card frames and step numbers ---- */
+  --color-spark: #7dd3fc;            /* pale blue — frames, numerals */
+  --color-spark-deep: #0b2a3a;       /* dark blue — number backgrounds */
+
+  /* ---- Aurora gradient: only inside the ✦ Spark icon ---- */
+  --color-aurora-1: #8b5cf6;         /* violet */
+  --color-aurora-2: #22d3ee;         /* cyan */
+  --color-aurora-3: #a3e635;         /* lime */
+
+  /* ---- Type scale: iOS Dynamic Type (default size) ---- */
+  --text-large-title: 34px;  --text-large-title--line-height: 41px;  --text-large-title--letter-spacing: 0.4px;
+  --text-title-1: 28px;      --text-title-1--line-height: 34px;      --text-title-1--letter-spacing: 0.38px;
+  --text-title-2: 22px;      --text-title-2--line-height: 28px;      --text-title-2--letter-spacing: -0.26px;
+  --text-title-3: 20px;      --text-title-3--line-height: 25px;      --text-title-3--letter-spacing: -0.45px;
+  --text-headline: 17px;     --text-headline--line-height: 22px;     --text-headline--letter-spacing: -0.43px;
+  --text-body: 17px;         --text-body--line-height: 22px;         --text-body--letter-spacing: -0.43px;
+  --text-callout: 16px;      --text-callout--line-height: 21px;      --text-callout--letter-spacing: -0.31px;
+  --text-subhead: 15px;      --text-subhead--line-height: 20px;      --text-subhead--letter-spacing: -0.23px;
+  --text-footnote: 13px;     --text-footnote--line-height: 18px;     --text-footnote--letter-spacing: -0.08px;
+  --text-caption-1: 12px;    --text-caption-1--line-height: 16px;
+  --text-caption-2: 11px;    --text-caption-2--line-height: 13px;    --text-caption-2--letter-spacing: 0.06px;
+
+  /* ---- Corner radius: iOS-like ---- */
+  --radius-control: 10px;   /* small buttons, inputs */
+  --radius-card: 16px;      /* cards, bubbles */
+  --radius-sheet: 22px;     /* large cards, bottom sheets */
+}
+
+/* ---- Aurora helpers (used by Spark cards only) ---- */
+@utility aurora-bg {
+  background: linear-gradient(120deg, var(--color-aurora-1), var(--color-aurora-2) 55%, var(--color-aurora-3));
+}
+@utility aurora-text {
+  background: linear-gradient(90deg, var(--color-aurora-1), var(--color-aurora-2) 55%, var(--color-aurora-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Spark frame: a pale blue border + faint blue glow around a dark card (decision #46) */
+@utility spark-ring {
+  border: 1px solid rgb(125 211 252 / 0.55);
+  background: var(--color-surface);
+  box-shadow: 0 0 14px -8px rgb(56 189 248 / 0.35);
+}
+
+/* Brand headline voice: the logo's heavy, tight type — hero titles only (decision #55).
+   Nav bars, lists and body text stay SF Pro, so the iOS frame stays intact. */
+@utility brand-title {
+  font-weight: 800;
+  --tw-tracking: -0.035em;
+  letter-spacing: -0.035em;
+}
+
+/* Signature Spark motion: one pale-blue light sweep around the card frame (decision #55) */
+.spark-sheen {
+  position: absolute; inset: 0; pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(115deg, transparent 38%, rgb(224 242 254) 50%, transparent 62%);
+  background-size: 300% 100%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spark-sheen 0.9s ease-out 0.45s both;
+}
+@keyframes spark-sheen {
+  0%   { background-position: 100% 0; opacity: 0; }
+  15%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { background-position: 0% 0; opacity: 0; }
+}
+
+/* iOS-like scrolling inside the phone: no desktop scrollbars, no scroll chaining to the page */
+.phone * { scrollbar-width: none; }
+.phone *::-webkit-scrollbar { display: none; }
+.phone .overflow-y-auto { overscroll-behavior: contain; }
+
+/* Safe areas: real iPhone uses the device insets; the desktop phone frame fakes them */
+.phone {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (min-width: 640px) {
+  .phone { --safe-top: 54px; --safe-bottom: 34px; }
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-label);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}

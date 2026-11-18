@@ -1,0 +1,15 @@
+# Only the prototype, the decision log and the exports are public.
+# The case brief, the presentation and the video stay private.
+*.pdf
+*.mov
+presentation/
+finalsubmissions/
+slide9-creepy-spammy/
+.claude/
+.DS_Store
+
+# Prototype build output and secrets
+node_modules/
+dist/
+.vercel/
+.env*
